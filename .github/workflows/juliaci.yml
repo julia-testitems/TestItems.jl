@@ -8,7 +8,8 @@ on:
 
 jobs:
   julia-ci:
-    uses: julia-testitems/testitem-workflow/.github/workflows/juliaci.yml@v2    with:
+    uses: julia-testitems/testitem-workflow/.github/workflows/juliaci.yml@v2
+    with:
       include-all-compatible-minor-versions: true
       include-rc-versions: true
     permissions: write-all
