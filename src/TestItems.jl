@@ -21,6 +21,12 @@ to share setup code between test items.
   before running the test code. Defaults to `true`.
 - `setup::Vector{Symbol}`: Names of `@testmodule` or `@testsnippet` definitions to
   evaluate before the test item runs.
+- `skip`: Either a `Bool` literal, or an arbitrary expression that evaluates to a `Bool`.
+  When it is `true` the test item is not run and is reported as skipped. Defaults to
+  `false`. An expression is evaluated **in the test process**, immediately before the
+  test item would have run, so checks like `VERSION < v"1.11"` or `Sys.iswindows()` see
+  the environment of the process the tests actually run in, not the one that discovered
+  them.
 
 ## Examples
 
@@ -37,6 +43,14 @@ end
 @testitem "with setup" tags=[:integration] setup=[DatabaseHelper] begin
     db = DatabaseHelper.connect()
     @test isopen(db)
+end
+
+@testitem "not ready yet" skip=true begin
+    @test false
+end
+
+@testitem "needs a recent Julia" skip=(VERSION < v"1.11") begin
+    @test true
 end
 ```
 """
