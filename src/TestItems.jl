@@ -28,6 +28,23 @@ to share setup code between test items.
   the environment of the process the tests actually run in, not the one that discovered
   them.
 
+## What a test item can import
+
+A test item runs in the same environment `Pkg.test` would build for the package that owns
+the file, so what it can `using` is the package's **test target** and nothing else:
+
+- the package's `test/Project.toml`, if it has one; otherwise
+- the package's own `[deps]`, plus the names its `[targets]` `test` list names, each
+  declared in `[extras]` or `[weakdeps]`;
+
+plus the package itself, and the standard library. That is a single target per package —
+Julia has no notion of per-directory test dependencies, so a `Project.toml` sitting deeper
+in the tree does not add any. A `@testmodule` or `@testsnippet` is subject to the same
+limit, since it is evaluated in the same environment.
+
+The runner that executes the test item decides which *versions* those resolve to, and
+`ArgumentError: Package Foo not found in current path` means `Foo` is not in the target.
+
 ## Examples
 
 ```julia
