@@ -1,6 +1,9 @@
 module TestItems
 
 export @testitem, @testmodule, @testsnippet
+export @prepare, @warmup, @measure, with_phase_transform
+
+include("phases.jl")
 
 """
     @testitem "name" [keyword_args...] begin
